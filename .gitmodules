@@ -1,0 +1,6 @@
+[submodule "miseeeeen-blog/themes/mini"]
+	path = miseeeeen-blog/themes/mini
+	url = https://github.com/nodejh/hugo-theme-mini.git
+[submodule "miseeeeen-blog/themes/hugo-bearblog"]
+	path = miseeeeen-blog/themes/hugo-bearblog
+	url = https://github.com/janraasch/hugo-bearblog.git
