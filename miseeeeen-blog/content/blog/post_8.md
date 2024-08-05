@@ -56,4 +56,32 @@ Speculation_Store_Bypass:	thread vulnerable
 SpeculationIndirectBranch:	conditional enabled
 ```
 
-至此, 问题就比较清楚了, 总结一下就是: zygote配置seccomp的时候, 出于安全考虑, 关掉了两个处理器level的优化, 导致app层的code执行得相对较慢. 如果想强制改变这个行为, 只需要加上这两个kernel参数就好了. “ spec_store_bypass_disable=off  spectre_v2_user=off ”
+对应kernel code是下面这段. PS: kernel 6.1下面, AUTO时候是不会对seccomp添加mitigation的.
+```
+// kernel 5.15 arch/x86/kernel/cpu/bugs.c 
+1747  static enum ssb_mitigation __init __ssb_select_mitigation(void)
+1748  {
+1749  	enum ssb_mitigation mode = SPEC_STORE_BYPASS_NONE;
+1750  	enum ssb_mitigation_cmd cmd;
+1751  
+1752  	if (!boot_cpu_has(X86_FEATURE_SSBD))
+1753  		return mode;
+1754  
+1755  	cmd = ssb_parse_cmdline();
+1756  	if (!boot_cpu_has_bug(X86_BUG_SPEC_STORE_BYPASS) &&
+1757  	    (cmd == SPEC_STORE_BYPASS_CMD_NONE ||
+1758  	     cmd == SPEC_STORE_BYPASS_CMD_AUTO))
+1759  		return mode;
+1760  
+1761  	switch (cmd) {
+1762  	case SPEC_STORE_BYPASS_CMD_AUTO:
+1763  	case SPEC_STORE_BYPASS_CMD_SECCOMP:
+1764  		/*
+1765  		 * Choose prctl+seccomp as the default mode if seccomp is
+1766  		 * enabled.
+1767  		 */
+1768  		if (IS_ENABLED(CONFIG_SECCOMP))
+1769  			mode = SPEC_STORE_BYPASS_SECCOMP;
+```
+
+至此, 问题就比较清楚了, 总结一下就是: zygote配置seccomp的时候, kernel出于安全考虑, 关掉了两个处理器level的优化, 导致app层的code执行得相对较慢. 如果想强制改变这个行为, 只需要加上这两个kernel参数就好了. “ spec_store_bypass_disable=off  spectre_v2_user=off ”
