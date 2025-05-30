@@ -6,7 +6,4 @@ title = "Miseeeeen's Blog"
 +++
 
 # Simple is beauty
-
-A normal programmer :D
-
-
+Hi, I'm a pnp programmer interested in Android/Kernel/GFX/AI
