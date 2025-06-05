@@ -3,8 +3,8 @@ title: "pytorch模型转换到onnx的踩坑记录"
 date: 2025-05-30T08:13:49+08:00
 draft: false
 ---
-作为AI初学者, 我在将FlashOcc模型从PyTorch移植到OpenVINO的过程中遇到了各种挑战.
-最后仍然没有成功转成openvino, 但是本文会列出一些自己踩过的坑, 希望能帮助类似问题的开发者.
+作为AI初学者, 我在将FlashOcc模型从PyTorch移植到OpenVINO的过程中遇到了各种问题.
+虽然仍然没有成功转成openvino, 但是本文会列出一些自己踩过的坑, 希望能帮助类似问题的开发者.
 
 ## 环境准备
 - **硬件**：NVIDIA RTX 4090
